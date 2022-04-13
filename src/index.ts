@@ -1,4 +1,4 @@
-import Student, { generateStudent } from "./engine/Student";
+import Student, { generateStudent } from "@/engine/Student";
 
 console.log("Hello this is the game");
 

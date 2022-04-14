@@ -1,7 +1,7 @@
-import Student, { generateStudent } from "@/engine/Student";
+import { createStudent } from "./engine/TeamMember/Student";
 
 console.log("Hello this is the game");
 
-const student: Student = generateStudent();
+console.log("Here is student: ");
 
-console.log("Here is student: ", student);
+console.log(createStudent());

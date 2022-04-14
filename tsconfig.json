@@ -2,7 +2,6 @@
     "$schema": "https://json.schemastore.org/tsconfig",
     "display": "Node 16",
     "compilerOptions": {
-        "composite": true,
         "rootDir": "./src",
         "outDir": "./build",
         "lib": [
@@ -25,7 +24,8 @@
             {
                 "transform": "typescript-transform-paths"
             }
-        ]
+        ],
+        "resolveJsonModule": true
     },
     "ts-node": {
         "transpileOnly": true,

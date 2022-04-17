@@ -57,30 +57,29 @@ export const moodFactorTypes = {
     },
     "WAS_DISCIPLINED": {
         "rate": 0,
-        "negativeRate": 1,
-        "positiveDescription": "",
+        "negativeRate": 0.9,
         "negativeDescription": "Is unhappy about having been disciplined",
         "amount": 2
     },
     "LED_BY_JUNIOR": {
         "rate": 0,
         "negativeRate": 0.4,
-        "positiveDescription": "",
         "negativeDescription": "Is frustrated by their leader being less senior than them",
         "amount": 1
     },
     "TOO_MANY_MEETINGS": {
         "rate": 0,
         "negativeRate": 0.25,
-        "positiveDescription": "",
-        "negativeDescription": "Is frustrated by the high number of meetings",
-        "amount": 1
+        "negativeDescription": "Is frustrated by the high number of meetings"
     }
 } as const;
 
 export type MoodFactor = {
     factor: keyof typeof moodFactorTypes;
-    data: typeof moodFactorTypes[keyof typeof moodFactorTypes];
+    data: typeof moodFactorTypes[keyof typeof moodFactorTypes] & {
+        positiveDescription?: string,
+        amount?: number
+    };
     type: "positive" | "negative";
     lifetimeRemaining: number;
 };

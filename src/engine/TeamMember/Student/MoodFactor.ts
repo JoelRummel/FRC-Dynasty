@@ -71,6 +71,13 @@ export const moodFactorTypes = {
         "rate": 0,
         "negativeRate": 0.25,
         "negativeDescription": "Is frustrated by the high number of meetings"
+    },
+    "DESIRED_WORK_AREA": {
+        "rate": 0.2,
+        "negativeRate": 0.75,
+        "positiveDescription": "Is glad to be doing work that interests them",
+        "negativeDescription": "Wants to do work in the discipline that interests them",
+        "amount": 1.5
     }
 } as const;
 

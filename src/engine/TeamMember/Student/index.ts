@@ -42,11 +42,11 @@ export const createStudent = (): Student => {
         else if (rand < moodFactorType.rate) moodTraits = { ...moodTraits, [key]: "positive" };
     }
 
-    const { firstName, lastName } = generateNames('M'); //  generateNames(Math.random() < 0.5 ? 'M' : 'F');
+    const { firstName, lastName } = generateNames(Math.random() < 0.5 ? 'M' : 'F');
     return {
         firstName,
         lastName,
-        year: randChoice([0, 1, 2, 3]) as 0 | 1 | 2 | 3,
+        year: randChoice([0, 1, 2, 3]),
         desiredSkill: randChoice(["building", "programming", "marketing"]),
         skills: {
             building: randRange(0, 6) as fullRange,

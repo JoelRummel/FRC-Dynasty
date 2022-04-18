@@ -1,7 +1,6 @@
-import { createStudent } from "./engine/TeamMember/Student";
+import chalk from "chalk";
+import mainLoop from "./driver";
 
-console.log("Hello this is the game");
+console.log("\n\n========== " + chalk.bold.underline("FRC DYNASTY") + " ==========\n");
 
-console.log("Here is student: ");
-
-console.log(createStudent());
+mainLoop();

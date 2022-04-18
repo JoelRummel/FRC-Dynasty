@@ -1,13 +1,20 @@
 import ensureType from "@/util/ensureType";
 import Item, { ItemId } from "..";
+import Stats from "./Stats";
+import { UpgradeId } from "./Upgrades";
 
 type Component<IngredientId> = {
     recipe: Readonly<{ itemId: IngredientId, altId?: IngredientId, count: number }[]>;
     skillRequirements: {
         building?: number,
         programming?: number
-    }
+    };
 } & Item;
+
+export type RobotReadyComponent = {
+    baseStats: Stats,
+    upgrades?: Readonly<{ id: UpgradeId, maxLevel?: 1 | 2 | 3 }[]>;
+} & Component<ComponentId>;
 
 export const genericComponents = ensureType<Component<ItemId>>()({
     SWERVE_MODULE: {
@@ -22,7 +29,6 @@ export const genericComponents = ensureType<Component<ItemId>>()({
         ],
         skillRequirements: { building: 8 }
     },
-
     VISION_MODULE: {
         name: "Vision Module",
         description: "Mounted camera that enables vision tracking.",
@@ -32,12 +38,20 @@ export const genericComponents = ensureType<Component<ItemId>>()({
             { itemId: "METAL", count: 3 }
         ],
         skillRequirements: { building: 1, programming: 5 }
+    },
+    ELEVATOR_FRAME: {
+        name: "Elevator Frame",
+        description: "Frame that can be used to build mechanisms that extend upwards.",
+        recipe: [
+            { itemId: "METAL", count: 15 }
+        ],
+        skillRequirements: { building: 3 }
     }
 } as const);
 
-type ComponentId = keyof typeof genericComponents;
+export type ComponentId = keyof typeof genericComponents | ItemId;
 
-export const driveTrains = ensureType<Component<ComponentId | ItemId>>()({
+export const driveTrains = ensureType<RobotReadyComponent>()({
     TANK_DRIVE: {
         name: "Tank Drive",
         description: "A simple six-wheel drive base with traction wheels. Easy to build, easy to drive.",
@@ -48,6 +62,8 @@ export const driveTrains = ensureType<Component<ComponentId | ItemId>>()({
             { itemId: "METAL", count: 20 }
         ],
         skillRequirements: { building: 1, programming: 1 },
+        baseStats: { agility: 3, traction: 9, durability: 9 },
+        upgrades: [{ id: "SHIFTING_GEARBOXES" }, { id: "DURABILITY", maxLevel: 1 }]
     },
     WEST_COAST_DRIVE: {
         name: "West Coast Drive",
@@ -60,6 +76,8 @@ export const driveTrains = ensureType<Component<ComponentId | ItemId>>()({
             { itemId: "METAL", count: 30 }
         ],
         skillRequirements: { building: 4, programming: 1 },
+        baseStats: { agility: 6, traction: 7, durability: 8 },
+        upgrades: [{ id: "SHIFTING_GEARBOXES" }, { id: "DURABILITY", maxLevel: 2 }]
     },
     MECANUM_DRIVE: {
         name: "Mecanum Drive",
@@ -72,6 +90,8 @@ export const driveTrains = ensureType<Component<ComponentId | ItemId>>()({
             { itemId: "METAL", count: 25 }
         ],
         skillRequirements: { building: 3, programming: 5 },
+        baseStats: { agility: 9, traction: 1, durability: 8 },
+        upgrades: [{ id: "DURABILITY", maxLevel: 2 }]
     },
     SWERVE_DRIVE: {
         name: "Swerve Drive",
@@ -82,5 +102,9 @@ export const driveTrains = ensureType<Component<ComponentId | ItemId>>()({
             { itemId: "METAL", count: 25 }
         ],
         skillRequirements: { building: 4, programming: 8 },
+        baseStats: { agility: 10, traction: 8, durability: 5 },
+        upgrades: [{ id: "DURABILITY", maxLevel: 3 }]
     }
 });
+
+export default Component;

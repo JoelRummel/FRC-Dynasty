@@ -1,4 +1,4 @@
-export const randChoice = (arr: any[]): any => {
+export const randChoice = <T>(arr: T[]): T => {
     return arr[~~(Math.random() * arr.length)];
 }
 

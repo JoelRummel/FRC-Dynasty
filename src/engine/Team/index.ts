@@ -1,3 +1,7 @@
+import { ItemId } from "../Item";
+import { ComponentId } from "../Item/Component";
+import RobotComponentState from "../Item/Component/RobotComponentState";
+import Robot from "../Robot";
 import Mentor, { createMentor, Profession } from "../TeamMember/Mentor";
 import Student, { createStudent } from "../TeamMember/Student";
 import Workspace, { createWorkspace } from "../Workspace";
@@ -7,6 +11,11 @@ type Team = {
     mentors: Record<string, Mentor>;
     workbenches: Workspace[];
     desks: Workspace[];
+    robots: Robot[];
+    inventory: {
+        items: { itemId: ItemId | ComponentId, count: number }[],
+        components: RobotComponentState[]
+    };
     coachId: "COACH";
 };
 
@@ -23,6 +32,11 @@ export const createTeam = (coachType: Profession): Team => {
         mentors: {
             "COACH": createMentor(coachType),
             "mentor1": createMentor()
+        },
+        robots: [],
+        inventory: {
+            items: [],
+            components: []
         },
         workbenches: [
             createWorkspace("Workbench"),

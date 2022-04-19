@@ -11,11 +11,6 @@ type Component<IngredientId> = {
     };
 } & Item;
 
-export type RobotReadyComponent = {
-    baseStats: Stats,
-    upgrades?: Readonly<{ id: UpgradeId, maxLevel?: 1 | 2 | 3 }[]>;
-} & Component<ComponentId>;
-
 export const genericComponents = ensureType<Component<ItemId>>()({
     SWERVE_MODULE: {
         name: "Swerve Module",
@@ -49,62 +44,10 @@ export const genericComponents = ensureType<Component<ItemId>>()({
     }
 } as const);
 
-export type ComponentId = keyof typeof genericComponents | ItemId;
+export type ComponentId = keyof typeof genericComponents;
 
-export const driveTrains = ensureType<RobotReadyComponent>()({
-    TANK_DRIVE: {
-        name: "Tank Drive",
-        description: "A simple six-wheel drive base with traction wheels. Easy to build, easy to drive.",
-        recipe: [
-            { itemId: "WHEEL", count: 6 },
-            { itemId: "MOTOR", count: 4 },
-            { itemId: "GEAR", count: 4 },
-            { itemId: "METAL", count: 20 }
-        ],
-        skillRequirements: { building: 1, programming: 1 },
-        baseStats: { agility: 3, traction: 9, durability: 9 },
-        upgrades: [{ id: "SHIFTING_GEARBOXES" }, { id: "DURABILITY", maxLevel: 1 }]
-    },
-    WEST_COAST_DRIVE: {
-        name: "West Coast Drive",
-        description: "An 8-wheel drive base with omni wheels at the corners. Keeps most of the traction of a tank drive while adding mobility.",
-        recipe: [
-            { itemId: "WHEEL", count: 4 },
-            { itemId: "OMNI_WHEEL", count: 4 },
-            { itemId: "MOTOR", count: 4 },
-            { itemId: "GEAR", count: 6 },
-            { itemId: "METAL", count: 30 }
-        ],
-        skillRequirements: { building: 4, programming: 1 },
-        baseStats: { agility: 6, traction: 7, durability: 8 },
-        upgrades: [{ id: "SHIFTING_GEARBOXES" }, { id: "DURABILITY", maxLevel: 2 }]
-    },
-    MECANUM_DRIVE: {
-        name: "Mecanum Drive",
-        description: "A special drivetrain that exchanges traction for the ability to move in any direction.",
-        recipe: [
-            { itemId: "OMNI_WHEEL", count: 4 },
-            { itemId: "MOTOR", count: 4 },
-            { itemId: "GYRO", count: 1 },
-            { itemId: "GEAR", count: 6 },
-            { itemId: "METAL", count: 25 }
-        ],
-        skillRequirements: { building: 3, programming: 5 },
-        baseStats: { agility: 9, traction: 1, durability: 8 },
-        upgrades: [{ id: "DURABILITY", maxLevel: 2 }]
-    },
-    SWERVE_DRIVE: {
-        name: "Swerve Drive",
-        description: "A special drivetrain that can move in any direction without sacrificing traction. Very heavy in motor usage.",
-        recipe: [
-            { itemId: "SWERVE_MODULE", altId: "PREBUILT_SWERVE_MODULE", count: 4 },
-            { itemId: "GYRO", count: 1 },
-            { itemId: "METAL", count: 25 }
-        ],
-        skillRequirements: { building: 4, programming: 8 },
-        baseStats: { agility: 10, traction: 8, durability: 5 },
-        upgrades: [{ id: "DURABILITY", maxLevel: 3 }]
-    }
-});
+//export const isComponentIdRobotReady = (key: string): boolean => {
+//    return !!robotReadyComponents[key as RobotReadyComponentId];
+//};
 
 export default Component;

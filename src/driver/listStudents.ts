@@ -17,24 +17,24 @@ const listStudents = (team: Team, { presentOnly = false, availableOnly = false, 
     let counter = 1;
     for (const [id, student] of Object.entries(team.students)) {
         if ((!availableOnly || !student.currentTask) && (!presentOnly || !student.absent) && !excludedIds.includes(id)) {
-            let str = `    ${promptChoice ? `${counter < 10 ? ' ' : ''}${counter})` : ''}${getStudentStateString(student)}`;
-            if (listSkills) str += '        ' + buildStatBars(student.skills);
+            let str = `    ${promptChoice ? `${counter < 10 ? ' ' : ''}${counter})` : ''} ${getStudentStateString(student)}`;
+            if (listSkills) str += ' '.repeat(32 - str.length) + buildStatBars(student.skills);
             choices.push(id);
             log(str);
+            counter++;
         }
-        counter++;
     }
 
     if (mentorsToo) {
         log(`\nAll ${presentOnly ? 'present ' : ''}mentors ${availableOnly ? 'available for tasking' : ''}:`);
         for (const [id, mentor] of Object.entries(team.mentors)) {
             if ((!availableOnly || !mentor.currentTask) && (!presentOnly || !mentor.absent) && !excludedIds.includes(id)) {
-                let str = `    ${promptChoice ? `${counter < 10 ? ' ' : ''}${counter})` : ''}${mentor.firstName} ${mentor.lastName}`;
-                if (listSkills) str += '        ' + buildStatBars(mentor.skills)
+                let str = `    ${promptChoice ? `${counter < 10 ? ' ' : ''}${counter})` : ''} ${mentor.firstName} ${mentor.lastName}`;
+                if (listSkills) str += ' '.repeat(32 - str.length) + buildStatBars(mentor.skills)
                 choices.push(id);
                 log(str);
+                counter++;
             }
-            counter++;
         }
     }
 

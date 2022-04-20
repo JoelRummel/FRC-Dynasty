@@ -1,9 +1,10 @@
 import promptSync from "prompt-sync";
 import League, { createLeague } from "@/engine/League";
-import Team, { createTeam } from "@/engine/Team";
+import { createTeam } from "@/engine/Team";
 import { Profession } from "@/engine/TeamMember/Mentor";
-import { getOverallMoodEmoji } from "@/engine/TeamMember/Student/Mood";
 import askChoice from "@/util/askChoice";
+import assignTaskMenu from "./assignTaskMenu";
+import listStudents from "./listStudents";
 
 const prompt = promptSync({ sigint: true });
 
@@ -23,21 +24,17 @@ const initialize = (): League => {
 const executeDay = (league: League) => {
     console.log(`\n===== DAY ${league.day} =====\n`);
     console.log("Team status: \n");
-    console.log("STUDENTS:");
-    for (const student of Object.values(league.userTeam.students)) {
-        console.log(`    ${getOverallMoodEmoji(student.state.mood)} ${student.firstName} ${student.lastName}`);
-    }
-    console.log("\nMENTORS:");
-    for (const mentor of Object.values(league.userTeam.mentors)) {
-        console.log(`    ${mentor.firstName} ${mentor.lastName}`);
-    }
-    prompt("Now do something");
+    listStudents(league.userTeam, { mentorsToo: true });
+    console.log();
+    const choice = askChoice(["Assign students to a new task", "Check inventory/robot", "Order new parts", "See more info about a student", "Expand workshop"], true);
+    if (choice === 0) assignTaskMenu(league.userTeam);
 };
 
 const mainLoop = () => {
     const league = initialize();
     while (true) {
         executeDay(league);
+        league.day += 1;
     }
 };
 

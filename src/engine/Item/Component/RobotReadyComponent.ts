@@ -1,5 +1,5 @@
 import ensureType from "@/util/ensureType";
-import Component, { ComponentId } from ".";
+import Component, { ComponentId, genericComponents } from ".";
 import { ItemId } from "..";
 import Stats from "./Stats";
 import { UpgradeId } from "./Upgrades";
@@ -155,5 +155,10 @@ export const robotReadyComponents = ensureType<RobotReadyComponent>()({
 });
 
 export type RobotReadyComponentId = keyof typeof robotReadyComponents;
+
+export const getComponentData = (id: ComponentId | RobotReadyComponentId): Component<ItemId | ComponentId> => {
+    if (!!robotReadyComponents[id as RobotReadyComponentId]) return robotReadyComponents[id as RobotReadyComponentId];
+    return genericComponents[id as ComponentId];
+}
 
 export default RobotReadyComponent;

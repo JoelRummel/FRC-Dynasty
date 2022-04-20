@@ -24,7 +24,8 @@ export const createMentor = (background?: Profession): Mentor => {
         currentTask: null,
         age: randRange(28, 65),
         profession: background || randChoice(["Mechanical Engineer", "Software Engineer", "Salesperson"]),
-        motivator: randChoice(["To Teach", "To Compete", "To Volunteer"])
+        motivator: randChoice(["To Teach", "To Compete", "To Volunteer"]),
+        absent: false
     }
 };
 

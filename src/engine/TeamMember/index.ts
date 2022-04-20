@@ -11,6 +11,7 @@ type TeamMember = {
     lastName: string;
     skills: CommonSkills;
     currentTask: Task | null;
+    absent: boolean;
 };
 
 export default TeamMember;

@@ -1,7 +1,9 @@
 import { generateNames } from '@/config/names';
+import { getTaskName } from '@/engine/Task';
 import { randChoice, randRange } from '@/util/rand';
+import chalk from 'chalk';
 import TeamMember, { CommonSkills } from '..';
-import Mood from './Mood';
+import Mood, { getOverallMoodEmoji } from './Mood';
 import { moodFactorTypes } from './MoodFactor';
 
 type halfRange = 0 | 1 | 2 | 3 | 4 | 5;
@@ -30,6 +32,13 @@ type Student = {
         mood: Mood;
     }
 } & TeamMember;
+
+export const getStudentStateString = (student: Student): string => {
+    let str = `${getOverallMoodEmoji(student.state.mood)} ${student.firstName} ${student.lastName}`;
+    if (student.currentTask) str += ` (${getTaskName(student.currentTask)})`
+    if (student.absent) str = chalk.dim(`${str} [ABSENT]`);
+    return str;
+};
 
 export const createStudent = (): Student => {
     let moodTraits: MoodTraits = {};
@@ -67,7 +76,8 @@ export const createStudent = (): Student => {
             mood: []
         },
 
-        currentTask: null
+        currentTask: null,
+        absent: false
     }
 };
 

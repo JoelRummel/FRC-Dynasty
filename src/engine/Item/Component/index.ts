@@ -46,8 +46,4 @@ export const genericComponents = ensureType<Component<ItemId>>()({
 
 export type ComponentId = keyof typeof genericComponents;
 
-//export const isComponentIdRobotReady = (key: string): boolean => {
-//    return !!robotReadyComponents[key as RobotReadyComponentId];
-//};
-
 export default Component;

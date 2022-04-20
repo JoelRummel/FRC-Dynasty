@@ -1,9 +1,11 @@
 import Team from ".";
 import { ItemId } from "../Item";
 import Component, { ComponentId, genericComponents } from "../Item/Component";
-import RobotReadyComponent, { RobotReadyComponentId, robotReadyComponents } from "../Item/Component/RobotReadyComponent";
+import RobotReadyComponent, { getComponentData, RobotReadyComponentId, robotReadyComponents } from "../Item/Component/RobotReadyComponent";
 import { UpgradeId } from "../Item/Component/Upgrades";
-import Task from "../Task";
+import Task, { BuildTask } from "../Task";
+import Mentor from "../TeamMember/Mentor";
+import Student from "../TeamMember/Student";
 
 const calcTotalWork = (buildReqs: { building?: number, programming?: number }): number => {
     return 100 + ((buildReqs.building || 0) * 10) + ((buildReqs.programming || 0) * 10);
@@ -11,24 +13,20 @@ const calcTotalWork = (buildReqs: { building?: number, programming?: number }): 
 
 export const assignBuildTask = (
     team: Team,
-    builderIds: string[],
-    programmerIds: string[],
-    item: { componentId?: ComponentId, robotReadyComponentId?: RobotReadyComponentId },
-    mentorId?: string,
+    builders: Student[],
+    programmers: Student[],
+    componentId: ComponentId | RobotReadyComponentId,
+    mentor?: Mentor,
 ) => {
-    const { componentId, robotReadyComponentId } = item;
-    let itemData: RobotReadyComponent | Component<ItemId> | undefined = componentId && genericComponents[componentId];
-    if (robotReadyComponentId) itemData = robotReadyComponents[robotReadyComponentId];
-    console.log(itemData);
+    const itemData = getComponentData(componentId);
 
-    const task: Task = {
-        type: "building",
-        mentor: mentorId ? team.mentors[mentorId] : undefined,
-        students: builderIds.map(id => team.students[id]),
-        studentsSecondary: programmerIds.map(id => team.students[id]),
+    const task: BuildTask = {
+        type: "build",
+        mentor,
+        students: builders,
+        studentsSoftware: programmers,
         componentId,
-        robotReadyComponentId,
-        workRemaining: calcTotalWork(itemData!.skillRequirements)
+        workRemaining: calcTotalWork(itemData.skillRequirements)
     }
     for (const workbench of team.workbenches) {
         if (!workbench.currentTask) {
@@ -36,8 +34,8 @@ export const assignBuildTask = (
             break;
         }
     }
-    for (const id of [...builderIds, ...programmerIds]) team.students[id].currentTask = task;
-    if (mentorId) team.mentors[mentorId].currentTask = task;
+    for (const student of [...builders, ...programmers]) student.currentTask = task;
+    if (mentor) mentor.currentTask = task;
 };
 
 export const assignUpgradeTask = (

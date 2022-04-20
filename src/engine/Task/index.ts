@@ -1,19 +1,42 @@
 import { ComponentId } from "../Item/Component"
-import { RobotReadyComponentId } from "../Item/Component/RobotReadyComponent";
+import RobotComponentState from "../Item/Component/RobotComponentState";
+import { getComponentData, RobotReadyComponentId } from "../Item/Component/RobotReadyComponent";
 import { UpgradeId } from "../Item/Component/Upgrades";
 import Mentor from "../TeamMember/Mentor"
 import Student from "../TeamMember/Student"
 
-type Task = {
-    type: "building" | "upgrading" | "skills",
-    componentId?: ComponentId,
-    robotReadyComponentId?: RobotReadyComponentId,      // Only one component ID should be specified.
-    upgradeId?: UpgradeId,
+type GenericTask = {
+    type: string,
     mentor?: Mentor,
     students: Student[],
-    studentsSecondary?: Student[],  // For things like software.
     workRemaining: number
 };
+
+export type BuildTask = {
+    type: "build",
+    componentId: ComponentId | RobotReadyComponentId,
+    studentsSoftware: Student[]
+} & GenericTask;
+
+export type UpgradeTask = {
+    type: "upgrade",
+    robotComponent: RobotComponentState,
+    upgradeId?: UpgradeId,
+    studentsSoftware: Student[]
+} & GenericTask;
+
+export type SkillsTask = {
+    type: "skills",
+    skill: "building" | "programming" | "marketing"
+}
+
+type Task = BuildTask | UpgradeTask | SkillsTask;
+
+export const getTaskName = (task: Task): string => {
+    if (task.type === "build") return `Building ${getComponentData(task.componentId).name}`;
+    if (task.type === "upgrade") return `Upgrading ${getComponentData(task.robotComponent.componentId).name}`;
+    return `Developing ${task.skill} skills`;
+}
 
 export const advanceTask = (task: Task) => {
     // TODO: reduce workRemaining based on students/mentors working

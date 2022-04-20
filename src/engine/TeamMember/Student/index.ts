@@ -53,6 +53,7 @@ export const createStudent = (): Student => {
 
     const { firstName, lastName } = generateNames(Math.random() < 0.5 ? 'M' : 'F');
     return {
+        id: String(Math.random()),
         firstName,
         lastName,
         year: randChoice([0, 1, 2, 3]),

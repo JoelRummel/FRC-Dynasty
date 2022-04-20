@@ -7,6 +7,7 @@ export type CommonSkills = {
 };
 
 type TeamMember = {
+    id: string;
     firstName: string;
     lastName: string;
     skills: CommonSkills;

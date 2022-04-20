@@ -13,7 +13,7 @@ const listStudents = (team: Team, { presentOnly = false, availableOnly = false, 
     }
 
     const choices: string[] = [];
-    log(`All ${presentOnly ? 'present ' : ''}students ${availableOnly ? 'available for tasking' : ''}:`);
+    log(`All ${presentOnly ? 'present ' : ''}students${availableOnly ? ' available for tasking' : ''}:`);
     let counter = 1;
     for (const [id, student] of Object.entries(team.students)) {
         if ((!availableOnly || !student.currentTask) && (!presentOnly || !student.absent) && !excludedIds.includes(id)) {
@@ -26,7 +26,7 @@ const listStudents = (team: Team, { presentOnly = false, availableOnly = false, 
     }
 
     if (mentorsToo) {
-        log(`\nAll ${presentOnly ? 'present ' : ''}mentors ${availableOnly ? 'available for tasking' : ''}:`);
+        log(`\nAll ${presentOnly ? 'present ' : ''}mentors${availableOnly ? ' available for tasking' : ''}:`);
         for (const [id, mentor] of Object.entries(team.mentors)) {
             if ((!availableOnly || !mentor.currentTask) && (!presentOnly || !mentor.absent) && !excludedIds.includes(id)) {
                 let str = `    ${promptChoice ? `${counter < 10 ? ' ' : ''}${counter})` : ''} ${mentor.firstName} ${mentor.lastName}`;

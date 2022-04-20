@@ -14,6 +14,7 @@ type Mentor = {
 export const createMentor = (background?: Profession): Mentor => {
     const { firstName, lastName } = generateNames(Math.random() < 0.5 ? "M" : "F");
     return {
+        id: String(Math.random()),
         firstName,
         lastName,
         skills: {

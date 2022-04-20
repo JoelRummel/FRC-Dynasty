@@ -16,23 +16,21 @@ type Team = {
         items: { itemId: ItemId | ComponentId, count: number }[],
         components: RobotComponentState[]
     };
-    coachId: "COACH";
+    coachId: string;
+};
+
+const addStudentToTeam = (team: Team, student: Student) => {
+    team.students[student.id] = student;
+};
+
+const addMentorToTeam = (team: Team, mentor: Mentor) => {
+    team.mentors[mentor.id] = mentor;
 };
 
 export const createTeam = (coachType: Profession): Team => {
-    return {
-        students: {
-            "student1": createStudent(),
-            "student2": createStudent(),
-            "student3": createStudent(),
-            "student4": createStudent(),
-            "student5": createStudent(),
-            "student6": createStudent()
-        },
-        mentors: {
-            "COACH": createMentor(coachType),
-            "mentor1": createMentor()
-        },
+    const team: Team = {
+        students: {},
+        mentors: {},
         robots: [],
         inventory: {
             items: [],
@@ -49,8 +47,17 @@ export const createTeam = (coachType: Profession): Team => {
             createWorkspace("Desk"),
             createWorkspace("Desk")
         ],
-        coachId: "COACH"
-    }
+        coachId: ""
+    };
+
+    for (let i = 0; i < 6; i++) addStudentToTeam(team, createStudent());
+    const coach = createMentor(coachType);
+    addMentorToTeam(team, coach);
+    team.coachId = coach.id;
+
+    addMentorToTeam(team, createMentor());
+
+    return team;
 }
 
 export default Team;

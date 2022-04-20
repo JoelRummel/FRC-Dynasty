@@ -8,6 +8,7 @@ import listStudents from "./listStudents";
 import Mentor from "../engine/TeamMember/Mentor";
 import Student from "../engine/TeamMember/Student";
 import promptSync from "prompt-sync";
+import TeamMember from "../engine/TeamMember";
 
 const prompt = promptSync({ sigint: true });
 
@@ -17,34 +18,31 @@ type TaskForce = {
     softwareStudents?: Student[]
 };
 
+const memberSkillLine = (member: TeamMember, skills: { building?: number, programming?: number }): string => {
+    let str = `${member.firstName} ${member.lastName}`;
+    str += ' '.repeat(26 - str.length) + buildStatBars(skills);
+    return str;
+}
+
 const printTaskForce = (force: TaskForce, hasSecondary: boolean) => {
     const tab = "             ";
 
     console.log("All team members currently assigned to this task:\n");
-    console.log("MENTOR:      " + (force.mentor ? `${force.mentor.firstName} ${force.mentor.lastName}` : chalk.dim('<none>')))
-    if (force.mentor) console.log(tab + buildStatBars(force.mentor.skills));
+    console.log("MENTOR:      " + (force.mentor ? memberSkillLine(force.mentor, force.mentor.skills) : chalk.dim('<none>')));
     console.log();
 
     let first = true;
     for (const student of force.students) {
-        let str = student.firstName + ' ' + student.lastName;
-        str += ' '.repeat(26 - str.length) + buildStatBars({ building: student.skills.building });
-        if (first) {
-            first = false;
-            console.log("BUILDERS:    " + str);
-        } else console.log(tab + str);
+        console.log((first ? "BUILDERS:    " : tab) + memberSkillLine(student, { building: student.skills.building }));
+        if (first) first = false;
     }
     console.log();
 
     if (hasSecondary) {
         first = true;
         for (const student of force.softwareStudents!) {
-            let str = student.firstName + ' ' + student.lastName;
-            str += ' '.repeat(28 - str.length) + buildStatBars({ programming: student.skills.programming });
-            if (first) {
-                first = false;
-                console.log("PROGRAMMERS: " + str);
-            } else console.log(tab + str);
+            console.log((first ? "PROGRAMMERS: " : tab) + memberSkillLine(student, { programming: student.skills.programming }));
+            if (first) first = false;
         }
     }
     console.log();
@@ -52,8 +50,12 @@ const printTaskForce = (force: TaskForce, hasSecondary: boolean) => {
 
 const selectTaskForce = (team: Team, hasSecondary: boolean, currentForce: TaskForce): TaskForce => {
     console.log("Select a student or mentor to add to the team working on this task:");
-    // const excludedIds = [...currentForce.students, ...currentForce.softwareStudents, currentForce.mentor ]
-    const chosenId = listStudents(team, { availableOnly: true, mentorsToo: true, promptChoice: true, listSkills: true }) as string;
+    const excludedIds = [
+        ...currentForce.students,
+        ...(currentForce.softwareStudents || []),
+        ...(currentForce.mentor ? [currentForce.mentor] : [])
+    ].map(s => s.id);
+    const chosenId = listStudents(team, { availableOnly: true, mentorsToo: true, promptChoice: true, listSkills: true, excludedIds }) as string;
     if (team.mentors[chosenId]) {
         currentForce.mentor = team.mentors[chosenId];
     } else if (team.students[chosenId]) {
